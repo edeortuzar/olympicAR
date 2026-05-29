@@ -442,37 +442,52 @@
 
     function startAR() {
       document.getElementById('splash').style.display = 'none';
-      document.getElementById('ar-container').style.display = 'block';
-      document.getElementById('ar-hud').style.display = 'block';
-      document.getElementById('btn-exit-ar').style.display = 'block';
+  document.getElementById('ar-container').style.display = 'block';
+  document.getElementById('ar-hud').style.display = 'block';
+  document.getElementById('btn-exit-ar').style.display = 'block';
 
-      sceneEl = document.getElementById('ar-scene');
+  sceneEl = document.getElementById('ar-scene');
 
-      sceneEl.addEventListener('arReady', () => {
-        showToast('Cámara lista 🎯');
+  /* Registrar eventos de detección */
+  for (let i = 0; i < VIDEOS.length; i++) {
+    const target = document.getElementById(`target-${i}`);
+    target.addEventListener('targetFound', () => {
+      detectedMarkers.add(i);
+      document.getElementById('ar-hud').innerHTML =
+        `<span class="dot-pulse"></span> Marker detectado — tocá para ver el video`;
+      showToast(`▶ ${VIDEOS[i].label}`);
+    });
+    target.addEventListener('targetLost', () => {
+      detectedMarkers.delete(i);
+      document.getElementById('ar-hud').innerHTML =
+        `<span class="dot-pulse"></span> Buscando markers...`;
+    });
+  }
+
+  /* Arrancar MindAR — maneja "ya loaded" y "aún cargando" */
+  function bootMindAR() {
+    mindarSystem = sceneEl.systems['mindar-image-system'];
+    if (!mindarSystem) {
+      setTimeout(bootMindAR, 200);
+      return;
+    }
+    mindarSystem.start()
+      .then(() => {
         arStarted = true;
+        showToast('Cámara lista 🎯');
+      })
+      .catch(err => {
+        console.error('MindAR error:', err);
+        document.getElementById('ar-hud').innerHTML =
+          `⚠️ Error al iniciar AR. Verificá la consola.`;
       });
+  }
 
-      /* Eventos de detección / pérdida de marker */
-      for (let i = 0; i < VIDEOS.length; i++) {
-        const target = document.getElementById(`target-${i}`);
-        target.addEventListener('targetFound', () => {
-          detectedMarkers.add(i);
-          document.getElementById('ar-hud').innerHTML =
-            `<span class="dot-pulse"></span> Marker detectado: ${VIDEOS[i].label}`;
-          showToast(`Tocá la pantalla para ver el video`);
-        });
-        target.addEventListener('targetLost', () => {
-          detectedMarkers.delete(i);
-          document.getElementById('ar-hud').innerHTML =
-            `<span class="dot-pulse"></span> Buscando markers...`;
-        });
-      }
-
-      sceneEl.addEventListener('loaded', () => {
-        mindarSystem = sceneEl.systems['mindar-image-system'];
-        mindarSystem.start();
-      });
+  if (sceneEl.hasLoaded) {
+    bootMindAR();
+  } else {
+    sceneEl.addEventListener('loaded', bootMindAR, { once: true });
+  }
     }
 
     function handleMarkerTap(index) {
