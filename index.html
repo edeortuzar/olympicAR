@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Olimpiadas AR</title>
+
+  <!-- MindAR + A-Frame -->
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js"></script>
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* ── Pantalla de inicio ── */
+    #splash {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: linear-gradient(160deg, #0d0d1a 0%, #001a33 50%, #0a1a0a 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .splash-rings {
+      position: relative;
+      width: 120px;
+      height: 80px;
+    }
+    .ring {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 5px solid transparent;
+    }
+    .ring:nth-child(1) { border-color: #0085C7; top: 0; left: 0; }
+    .ring:nth-child(2) { border-color: #000000; top: 0; left: 36px; }
+    .ring:nth-child(3) { border-color: #DF0024; top: 0; left: 72px; }
+    .ring:nth-child(4) { border-color: #F4C300; top: 24px; left: 18px; }
+    .ring:nth-child(5) { border-color: #009F3D; top: 24px; left: 54px; }
+
+    #splash h1 {
+      font-size: clamp(1.6rem, 6vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 0%, #aac8ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    #splash p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    .marker-list {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      width: 100%;
+      max-width: 340px;
+      text-align: left;
+    }
+    .marker-list h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.75rem;
+    }
+    .marker-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.85);
+    }
+    .marker-item:last-child { border-bottom: none; }
+    .marker-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .dot-0 { background: #0085C7; }
+    .dot-1 { background: #F4C300; }
+    .dot-2 { background: #009F3D; }
+
+    #btn-start {
+      background: #0085C7;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 1rem 2.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 20px rgba(0,133,199,0.4);
+    }
+    #btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,133,199,0.5); }
+    #btn-start:active { transform: scale(0.97); }
+
+    /* ── Escena AR ── */
+    #ar-container {
+      display: none;
+      position: fixed;
+      inset: 0;
+    }
+
+    /* ── Overlay de video ── */
+    #video-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(0,0,0,0.85);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem;
+    }
+    #video-overlay.active { display: flex; }
+
+    .video-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 640px;
+    }
+    .video-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    #btn-close-video {
+      background: rgba(255,255,255,0.12);
+      border: none;
+      color: #fff;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    #btn-close-video:hover { background: rgba(255,255,255,0.22); }
+
+    .video-wrapper {
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 16/9;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+    }
+    .video-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ── HUD mientras AR activo ── */
+    #ar-hud {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50px;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.8);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    #ar-hud .dot-pulse {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #0f0;
+      margin-right: 6px;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    #btn-exit-ar {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      display: none;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      border-radius: 50px;
+      padding: 0.6rem 1.5rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    /* ── Toast de detección ── */
+    #toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      z-index: 45;
+      background: rgba(0,133,199,0.9);
+      color: #fff;
+      border-radius: 50px;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════
+       PANTALLA DE INICIO
+  ══════════════════════════════════ -->
+  <div id="splash">
+    <div class="splash-rings">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+    </div>
+
+    <h1>Olimpiadas en AR</h1>
+    <p>Apuntá la cámara a los markers y descubrí momentos épicos de los Juegos Olímpicos.</p>
+
+    <div class="marker-list">
+      <h3>Markers disponibles</h3>
+      <div class="marker-item">
+        <span class="marker-dot dot-0"></span>
+        <span id="label-0">Cargando...</span>
+      </div>
+      <div class="marker-item">
+        <span class="marker-dot dot-1"></span>
+        <span id="label-1">Cargando...</span>
+      </div>
+      <div class="marker-item">
+        <span class="marker-dot dot-2"></span>
+        <span id="label-2">Cargando...</span>
+      </div>
+    </div>
+
+    <button id="btn-start" onclick="startAR()">
+      📷 Activar cámara AR
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════
+       ESCENA A-FRAME / MINDAR
+  ══════════════════════════════════ -->
+  <div id="ar-container">
+    <a-scene
+      id="ar-scene"
+      mindar-image="imageTargetSrc: targets.mind; autoStart: false; uiLoading: no; uiError: no; uiScanning: no;"
+      color-space="sRGB"
+      renderer="colorManagement: true; physicallyCorrectLights: true"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
+      <a-assets></a-assets>
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <!-- Marker 0 -->
+      <a-entity mindar-image-target="targetIndex: 0" id="target-0">
+        <a-plane
+          position="0 0 0"
+          height="0.55"
+          width="1"
+          material="color: #003366; opacity: 0.85; side: double"
+          class="clickable"
+          data-marker="0"
+          onclick="handleMarkerTap(0)"
+        >
+          <a-text
+            value="▶ Ver video"
+            align="center"
+            color="#ffffff"
+            width="2"
+            position="0 0 0.01"
+          ></a-text>
+        </a-plane>
+      </a-entity>
+
+      <!-- Marker 1 -->
+      <a-entity mindar-image-target="targetIndex: 1" id="target-1">
+        <a-plane
+          position="0 0 0"
+          height="0.55"
+          width="1"
+          material="color: #663300; opacity: 0.85; side: double"
+          class="clickable"
+          data-marker="1"
+          onclick="handleMarkerTap(1)"
+        >
+          <a-text
+            value="▶ Ver video"
+            align="center"
+            color="#ffffff"
+            width="2"
+            position="0 0 0.01"
+          ></a-text>
+        </a-plane>
+      </a-entity>
+
+      <!-- Marker 2 -->
+      <a-entity mindar-image-target="targetIndex: 2" id="target-2">
+        <a-plane
+          position="0 0 0"
+          height="0.55"
+          width="1"
+          material="color: #003300; opacity: 0.85; side: double"
+          class="clickable"
+          data-marker="2"
+          onclick="handleMarkerTap(2)"
+        >
+          <a-text
+            value="▶ Ver video"
+            align="center"
+            color="#ffffff"
+            width="2"
+            position="0 0 0.01"
+          ></a-text>
+        </a-plane>
+      </a-entity>
+
+    </a-scene>
+  </div>
+
+  <!-- ══════════════════════════════════
+       HUD Y CONTROLES AR
+  ══════════════════════════════════ -->
+  <div id="ar-hud">
+    <span class="dot-pulse"></span>
+    Buscando markers...
+  </div>
+  <button id="btn-exit-ar" onclick="exitAR()">✕ Salir de AR</button>
+
+  <!-- ══════════════════════════════════
+       OVERLAY DE VIDEO
+  ══════════════════════════════════ -->
+  <div id="video-overlay">
+    <div class="video-header">
+      <span class="video-title" id="video-title-label">Video olímpico</span>
+      <button id="btn-close-video" onclick="closeVideo()" aria-label="Cerrar video">✕</button>
+    </div>
+    <div class="video-wrapper">
+      <iframe
+        id="yt-frame"
+        src=""
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       TOAST
+  ══════════════════════════════════ -->
+  <div id="toast"></div>
+
+  <!-- ══════════════════════════════════
+       CONFIGURACIÓN DE VIDEOS
+       ▸ Editá aquí los títulos y los IDs de YouTube
+  ══════════════════════════════════ -->
+  <script>
+    /**
+     * VIDEOS CONFIG
+     * Cada entrada corresponde a un marker (índice 0, 1, 2...).
+     * youtubeId: el ID que aparece en youtube.com/watch?v=ESTE_ID
+     */
+    const VIDEOS = [
+      {
+        label: "Tokyo 2020",
+        youtubeId: "hje20_Q2JrI"
+      },
+      {
+        label: "London 2012",
+        youtubeId: "uwLDpcye-VM"
+      },
+      {
+        label: "Paris 2024",
+        youtubeId: "jJnKzgwkAb0"
+      }
+    ];
+
+    /* Llenar lista de markers en la splash */
+    VIDEOS.forEach((v, i) => {
+      const el = document.getElementById(`label-${i}`);
+      if (el) el.textContent = v.label;
+    });
+
+    /* ── AR State ── */
+    let arStarted = false;
+    let sceneEl, mindarSystem;
+    const detectedMarkers = new Set();
+
+    function startAR() {
+      document.getElementById('splash').style.display = 'none';
+      document.getElementById('ar-container').style.display = 'block';
+      document.getElementById('ar-hud').style.display = 'block';
+      document.getElementById('btn-exit-ar').style.display = 'block';
+
+      sceneEl = document.getElementById('ar-scene');
+
+      sceneEl.addEventListener('arReady', () => {
+        showToast('Cámara lista 🎯');
+        arStarted = true;
+      });
+
+      /* Eventos de detección / pérdida de marker */
+      for (let i = 0; i < VIDEOS.length; i++) {
+        const target = document.getElementById(`target-${i}`);
+        target.addEventListener('targetFound', () => {
+          detectedMarkers.add(i);
+          document.getElementById('ar-hud').innerHTML =
+            `<span class="dot-pulse"></span> Marker detectado: ${VIDEOS[i].label}`;
+          showToast(`Tocá la pantalla para ver el video`);
+        });
+        target.addEventListener('targetLost', () => {
+          detectedMarkers.delete(i);
+          document.getElementById('ar-hud').innerHTML =
+            `<span class="dot-pulse"></span> Buscando markers...`;
+        });
+      }
+
+      sceneEl.addEventListener('loaded', () => {
+        mindarSystem = sceneEl.systems['mindar-image-system'];
+        mindarSystem.start();
+      });
+    }
+
+    function handleMarkerTap(index) {
+      openVideo(index);
+    }
+
+    /* También abrir video al tocar si hay un marker activo (fallback táctil) */
+    document.addEventListener('click', (e) => {
+      if (!arStarted) return;
+      if (document.getElementById('video-overlay').classList.contains('active')) return;
+      if (e.target.closest('#btn-exit-ar')) return;
+      if (detectedMarkers.size > 0) {
+        const first = [...detectedMarkers][0];
+        openVideo(first);
+      }
+    });
+
+    function openVideo(index) {
+      const v = VIDEOS[index];
+      if (!v) return;
+      document.getElementById('yt-frame').src =
+        `https://www.youtube.com/embed/${v.youtubeId}?autoplay=1&rel=0`;
+      document.getElementById('video-title-label').textContent = v.label;
+      document.getElementById('video-overlay').classList.add('active');
+
+      /* Pausar AR tracking para ahorrar recursos */
+      if (mindarSystem) mindarSystem.pause(true);
+    }
+
+    function closeVideo() {
+      document.getElementById('yt-frame').src = '';
+      document.getElementById('video-overlay').classList.remove('active');
+      if (mindarSystem) mindarSystem.unpause();
+    }
+
+    function exitAR() {
+      closeVideo();
+      if (mindarSystem) mindarSystem.stop();
+      arStarted = false;
+      detectedMarkers.clear();
+      document.getElementById('ar-container').style.display = 'none';
+      document.getElementById('ar-hud').style.display = 'none';
+      document.getElementById('btn-exit-ar').style.display = 'none';
+      document.getElementById('splash').style.display = 'flex';
+    }
+
+    /* ── Toast helper ── */
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    }
+  </script>
+</body>
+</html>
