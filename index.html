@@ -11,247 +11,138 @@
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #0a0a0a;
-      color: #fff;
-      overflow: hidden;
-      height: 100vh;
-      width: 100vw;
+      background: #0a0a0a; color: #fff;
+      overflow: hidden; height: 100vh; width: 100vw;
     }
 
+    /* ── Splash ── */
     #splash {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
+      position: fixed; inset: 0; z-index: 100;
       background: linear-gradient(160deg, #0d0d1a 0%, #001a33 50%, #0a1a0a 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2rem;
-      padding: 2rem;
-      text-align: center;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 2rem; padding: 2rem; text-align: center;
     }
-
     .splash-rings { position: relative; width: 120px; height: 80px; }
-    .ring {
-      position: absolute;
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      border: 5px solid transparent;
-    }
-    .ring:nth-child(1) { border-color: #0085C7; top: 0; left: 0; }
-    .ring:nth-child(2) { border-color: #fff; top: 0; left: 36px; }
-    .ring:nth-child(3) { border-color: #DF0024; top: 0; left: 72px; }
-    .ring:nth-child(4) { border-color: #F4C300; top: 24px; left: 18px; }
-    .ring:nth-child(5) { border-color: #009F3D; top: 24px; left: 54px; }
-
+    .ring { position: absolute; width: 48px; height: 48px; border-radius: 50%; border: 5px solid transparent; }
+    .ring:nth-child(1) { border-color: #0085C7; top:0; left:0; }
+    .ring:nth-child(2) { border-color: #fff;    top:0; left:36px; }
+    .ring:nth-child(3) { border-color: #DF0024; top:0; left:72px; }
+    .ring:nth-child(4) { border-color: #F4C300; top:24px; left:18px; }
+    .ring:nth-child(5) { border-color: #009F3D; top:24px; left:54px; }
     #splash h1 {
-      font-size: clamp(1.6rem, 6vw, 2.4rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #fff 0%, #aac8ff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: clamp(1.6rem,6vw,2.4rem); font-weight: 700;
+      background: linear-gradient(135deg,#fff 0%,#aac8ff 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-
-    #splash p {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.6);
-      max-width: 320px;
-      line-height: 1.6;
-    }
-
+    #splash p { font-size: 1rem; color: rgba(255,255,255,.6); max-width: 320px; line-height: 1.6; }
     .marker-list {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 1.25rem 1.5rem;
-      width: 100%;
-      max-width: 340px;
-      text-align: left;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px; padding: 1.25rem 1.5rem; width: 100%; max-width: 340px; text-align: left;
     }
-    .marker-list h3 {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.4);
-      margin-bottom: 0.75rem;
-    }
-    .marker-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.85);
-    }
+    .marker-list h3 { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.4); margin-bottom: .75rem; }
+    .marker-item { display: flex; align-items: center; gap: .75rem; padding: .5rem 0; border-bottom: 1px solid rgba(255,255,255,.06); font-size: .9rem; }
     .marker-item:last-child { border-bottom: none; }
     .marker-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-    .dot-0 { background: #0085C7; }
-    .dot-1 { background: #F4C300; }
-    .dot-2 { background: #009F3D; }
-
+    .dot-0 { background: #0085C7; } .dot-1 { background: #F4C300; } .dot-2 { background: #009F3D; }
     #btn-start {
-      background: #0085C7;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 1rem 2.5rem;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 20px rgba(0,133,199,0.4);
+      background: #0085C7; color: #fff; border: none; border-radius: 50px;
+      padding: 1rem 2.5rem; font-size: 1rem; font-weight: 600; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,133,199,.4);
     }
-    #btn-start:hover { transform: translateY(-2px); }
-    #btn-start:active { transform: scale(0.97); }
 
-    #ar-container {
+    /* ── AR container ── */
+    #ar-container { display: none; position: fixed; inset: 0; }
+
+    /* ── GIF overlay — aparece sobre la cámara al detectar marker 0 ── */
+    #gif-overlay {
       display: none;
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0; z-index: 35;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    #gif-overlay.active { display: flex; }
+    #gif-overlay img {
+      max-width: 80vw; max-height: 50vh;
+      object-fit: contain;
+      border-radius: 12px;
     }
 
-    /* ── Overlay de video ── */
+    /* ── MP4 overlay — aparece sobre la cámara al detectar marker 1 ── */
+    #mp4-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 35;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    #mp4-overlay.active { display: flex; }
+    #mp4-overlay video {
+      max-width: 90vw; max-height: 60vh;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    /* ── YouTube overlay (marker 2) ── */
     #video-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 50;
-      background: rgba(0,0,0,0.88);
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 1rem;
-      padding: 1rem;
+      visibility: hidden; pointer-events: none;
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(0,0,0,.9);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 1rem; padding: 1rem;
     }
-    #video-overlay.active { display: flex; }
-
-    .video-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 640px;
-    }
-    .video-title { font-size: 1rem; font-weight: 600; color: #fff; }
+    #video-overlay.active { visibility: visible; pointer-events: auto; }
+    .video-header { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 640px; }
+    .video-title { font-size: 1rem; font-weight: 600; }
     #btn-close-video {
-      background: rgba(255,255,255,0.12);
-      border: none;
-      color: #fff;
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.2rem;
+      background: rgba(255,255,255,.12); border: none; color: #fff;
+      width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 1.4rem;
       display: flex; align-items: center; justify-content: center;
     }
-
-    .video-wrapper {
-      width: 100%;
-      max-width: 640px;
-      aspect-ratio: 16/9;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #000;
-    }
+    .video-wrapper { width: 100%; max-width: 640px; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #000; }
     .video-wrapper iframe { width: 100%; height: 100%; border: none; }
 
     /* ── HUD ── */
     #ar-hud {
-      display: none;
-      position: fixed;
-      top: 1rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 40;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 50px;
-      padding: 0.5rem 1.25rem;
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.85);
-      pointer-events: none;
-      white-space: nowrap;
+      display: none; position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
+      z-index: 40; background: rgba(0,0,0,.6); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.15); border-radius: 50px;
+      padding: .5rem 1.25rem; font-size: .8rem; color: rgba(255,255,255,.85);
+      pointer-events: none; white-space: nowrap;
     }
     .dot-pulse {
-      display: inline-block;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #0f0;
-      margin-right: 6px;
+      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+      background: #0f0; margin-right: 6px; vertical-align: middle;
       animation: pulse 1.4s ease-in-out infinite;
-      vertical-align: middle;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.7); }
-    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
 
-    /* ── Botón "Ver video" HTML (reemplaza el plano 3D para toques) ── */
-    #btn-ver-video {
+    /* ── Botón acción HTML ── */
+    #btn-accion {
       display: none;
-      position: fixed;
-      bottom: 6rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 45;
-      background: rgba(0, 133, 199, 0.92);
-      backdrop-filter: blur(8px);
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 1rem 2.5rem;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 24px rgba(0,133,199,0.5);
-      animation: pop-in 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      letter-spacing: 0.01em;
+      position: fixed; bottom: 6.5rem; left: 50%; transform: translateX(-50%);
+      z-index: 60;
+      background: #0085C7; color: #fff; border: none; border-radius: 50px;
+      padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 28px rgba(0,133,199,.6);
+      min-width: 220px; min-height: 56px;
+      -webkit-tap-highlight-color: rgba(0,133,199,.3);
     }
-    @keyframes pop-in {
-      from { transform: translateX(-50%) scale(0.7); opacity: 0; }
-      to   { transform: translateX(-50%) scale(1);   opacity: 1; }
-    }
+    #btn-accion:active { background: #006fa8; transform: translateX(-50%) scale(0.96); }
 
     #btn-exit-ar {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 40;
-      display: none;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff;
-      border-radius: 50px;
-      padding: 0.6rem 1.5rem;
-      cursor: pointer;
-      font-size: 0.85rem;
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      z-index: 40; display: none;
+      background: rgba(0,0,0,.6); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.2); color: #fff;
+      border-radius: 50px; padding: .6rem 1.5rem; cursor: pointer; font-size: .85rem; min-height: 44px;
     }
 
     #toast {
-      position: fixed;
-      bottom: 5rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      z-index: 45;
-      background: rgba(0,133,199,0.9);
-      color: #fff;
-      border-radius: 50px;
-      padding: 0.6rem 1.4rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      opacity: 0;
-      transition: opacity 0.3s, transform 0.3s;
-      pointer-events: none;
-      white-space: nowrap;
+      position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%) translateY(20px);
+      z-index: 45; background: rgba(0,133,199,.9); color: #fff;
+      border-radius: 50px; padding: .6rem 1.4rem; font-size: .85rem; font-weight: 500;
+      opacity: 0; transition: opacity .3s, transform .3s; pointer-events: none; white-space: nowrap;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
@@ -266,71 +157,75 @@
     </div>
     <h1>Olimpiadas en AR</h1>
     <p>Apuntá la cámara a los markers y descubrí momentos épicos de los Juegos Olímpicos.</p>
-
     <div class="marker-list">
       <h3>Markers disponibles</h3>
-      <div class="marker-item"><span class="marker-dot dot-0"></span><span id="label-0">Cargando...</span></div>
-      <div class="marker-item"><span class="marker-dot dot-1"></span><span id="label-1">Cargando...</span></div>
-      <div class="marker-item"><span class="marker-dot dot-2"></span><span id="label-2">Cargando...</span></div>
+      <div class="marker-item"><span class="marker-dot dot-0"></span><span>Anillos Olímpicos (GIF)</span></div>
+      <div class="marker-item"><span class="marker-dot dot-1"></span><span>Ceremonia (Video)</span></div>
+      <div class="marker-item"><span class="marker-dot dot-2"></span><span>Paris 2024 (YouTube)</span></div>
     </div>
-
     <button id="btn-start" onclick="startAR()">📷 Activar cámara AR</button>
   </div>
 
   <!-- ESCENA AR -->
   <div id="ar-container">
-    <a-scene
-      id="ar-scene"
+    <a-scene id="ar-scene"
       mindar-image="imageTargetSrc: targets.mind; autoStart: false; uiLoading: no; uiError: no; uiScanning: no;"
       color-space="sRGB"
       renderer="colorManagement: true; physicallyCorrectLights: true"
       vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false"
-    >
-      <a-assets></a-assets>
+      device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <!-- El video MP4 se preloadea aquí para que A-Frame lo gestione -->
+        <video id="mp4-asset" src="ceremonia.mp4" loop crossorigin="anonymous" playsinline webkit-playsinline preload="auto"></video>
+      </a-assets>
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <!-- Los planos siguen siendo visibles como overlay visual, pero el toque lo maneja el botón HTML -->
+      <!-- Marker 0: GIF — plano invisible, el GIF se muestra en HTML overlay -->
       <a-entity mindar-image-target="targetIndex: 0" id="target-0">
-        <a-plane position="0 0 0" height="0.55" width="1"
-          material="color: #003366; opacity: 0.7; side: double">
-          <a-text value="▶  Ver video" align="center" color="#ffffff" width="2" position="0 0 0.01"></a-text>
-        </a-plane>
+        <a-plane position="0 0 0" height="0.01" width="0.01" material="opacity: 0"></a-plane>
       </a-entity>
 
+      <!-- Marker 1: MP4 — plano con textura de video A-Frame -->
       <a-entity mindar-image-target="targetIndex: 1" id="target-1">
-        <a-plane position="0 0 0" height="0.55" width="1"
-          material="color: #663300; opacity: 0.7; side: double">
-          <a-text value="▶  Ver video" align="center" color="#ffffff" width="2" position="0 0 0.01"></a-text>
-        </a-plane>
+        <a-video id="ar-video-plane"
+          src="#mp4-asset"
+          width="1.6" height="0.9"
+          position="0 0 0">
+        </a-video>
       </a-entity>
 
+      <!-- Marker 2: YouTube — plano invisible, el video se muestra en HTML overlay -->
       <a-entity mindar-image-target="targetIndex: 2" id="target-2">
-        <a-plane position="0 0 0" height="0.55" width="1"
-          material="color: #003300; opacity: 0.7; side: double">
-          <a-text value="▶  Ver video" align="center" color="#ffffff" width="2" position="0 0 0.01"></a-text>
-        </a-plane>
+        <a-plane position="0 0 0" height="0.01" width="0.01" material="opacity: 0"></a-plane>
       </a-entity>
     </a-scene>
   </div>
 
+  <!-- GIF overlay HTML (marker 0) -->
+  <div id="gif-overlay">
+    <img src="anillos.gif" alt="Anillos Olímpicos animados" />
+  </div>
+
+  <!-- MP4 overlay HTML — solo para mostrar controles de cierre si se quiere -->
+  <div id="mp4-overlay"></div>
+
   <!-- HUD -->
   <div id="ar-hud"><span class="dot-pulse"></span>Buscando markers...</div>
 
-  <!-- BOTÓN HTML para abrir video — aparece al detectar marker -->
-  <button id="btn-ver-video" onclick="abrirVideoActivo()">▶ Ver video</button>
+  <!-- Botón acción (YouTube únicamente — GIF y MP4 se ven directo) -->
+  <button id="btn-accion"></button>
 
   <button id="btn-exit-ar" onclick="exitAR()">✕ Salir de AR</button>
 
-  <!-- OVERLAY VIDEO -->
+  <!-- OVERLAY YouTube -->
   <div id="video-overlay">
     <div class="video-header">
-      <span class="video-title" id="video-title-label">Video olímpico</span>
-      <button id="btn-close-video" onclick="closeVideo()" aria-label="Cerrar video">✕</button>
+      <span class="video-title" id="video-title-label">Paris 2024</span>
+      <button id="btn-close-video" onclick="closeYoutube()">✕</button>
     </div>
     <div class="video-wrapper">
-      <iframe id="yt-frame" src=""
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      <iframe id="yt-frame" src="about:blank"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen></iframe>
     </div>
   </div>
@@ -338,25 +233,22 @@
   <div id="toast"></div>
 
   <script>
-    /* ══════════════════════════════
-       CONFIGURACIÓN DE VIDEOS
-       Cada índice = un marker
-    ══════════════════════════════ */
-    const VIDEOS = [
-      { label: "Tokyo 2020",  youtubeId: "L13hSQVBRPY" },
-      { label: "London 2012", youtubeId: "uwLDpcye-VM" },
-      { label: "Paris 2024",  youtubeId: "jJnKzgwkAb0" }
+    /* ══════════════════════════════════════════
+       CONFIGURACIÓN POR MARKER
+       tipo: 'gif' | 'mp4' | 'youtube'
+    ══════════════════════════════════════════ */
+    const MARKERS = [
+      { label: "Anillos Olímpicos", tipo: "gif",     src: "anillos.gif" },
+      { label: "Ceremonia",         tipo: "mp4",     src: "ceremonia.mp4" },
+      { label: "Paris 2024",        tipo: "youtube", src: "jJnKzgwkAb0" }
     ];
-
-    VIDEOS.forEach((v, i) => {
-      const el = document.getElementById(`label-${i}`);
-      if (el) el.textContent = v.label;
-    });
 
     /* ── Estado ── */
     let sceneEl, mindarSystem;
     const detectedMarkers = new Set();
+    const mp4El = document.getElementById('mp4-asset');
 
+    /* ── AR Init ── */
     function startAR() {
       document.getElementById('splash').style.display = 'none';
       document.getElementById('ar-container').style.display = 'block';
@@ -365,29 +257,24 @@
 
       sceneEl = document.getElementById('ar-scene');
 
-      /* Registrar detección de cada marker */
-      for (let i = 0; i < VIDEOS.length; i++) {
+      for (let i = 0; i < MARKERS.length; i++) {
         const target = document.getElementById(`target-${i}`);
+
         target.addEventListener('targetFound', () => {
           detectedMarkers.add(i);
           document.getElementById('ar-hud').innerHTML =
-            `<span class="dot-pulse"></span>${VIDEOS[i].label} detectado`;
-          /* Mostrar botón HTML */
-          const btn = document.getElementById('btn-ver-video');
-          btn.textContent = `▶ Ver: ${VIDEOS[i].label}`;
-          btn.style.display = 'block';
+            `<span class="dot-pulse"></span>${MARKERS[i].label} detectado`;
+          onMarkerFound(i);
         });
+
         target.addEventListener('targetLost', () => {
           detectedMarkers.delete(i);
           document.getElementById('ar-hud').innerHTML =
             `<span class="dot-pulse"></span>Buscando markers...`;
-          if (detectedMarkers.size === 0) {
-            document.getElementById('btn-ver-video').style.display = 'none';
-          }
+          onMarkerLost(i);
         });
       }
 
-      /* Arrancar MindAR — maneja "ya loaded" y "aún cargando" */
       function bootMindAR() {
         mindarSystem = sceneEl.systems['mindar-image-system'];
         if (!mindarSystem) { setTimeout(bootMindAR, 200); return; }
@@ -399,52 +286,88 @@
           });
       }
 
-      if (sceneEl.hasLoaded) {
-        bootMindAR();
-      } else {
-        sceneEl.addEventListener('loaded', bootMindAR, { once: true });
+      sceneEl.hasLoaded ? bootMindAR() : sceneEl.addEventListener('loaded', bootMindAR, { once: true });
+    }
+
+    /* ── Lógica al detectar marker ── */
+    function onMarkerFound(i) {
+      const m = MARKERS[i];
+      const btn = document.getElementById('btn-accion');
+
+      if (m.tipo === 'gif') {
+        /* Mostrar GIF como overlay HTML */
+        document.getElementById('gif-overlay').classList.add('active');
+        btn.style.display = 'none';
+
+      } else if (m.tipo === 'mp4') {
+        /* El video ya está en el plano A-Frame — solo reproducirlo */
+        mp4El.play().catch(e => console.warn('mp4 play:', e));
+        btn.style.display = 'none';
+
+      } else if (m.tipo === 'youtube') {
+        /* Mostrar botón para abrir YouTube */
+        btn.textContent = `▶ ${m.label}`;
+        btn.style.display = 'block';
+        btn.onclick = null;
+        btn.ontouchend = null;
+        btn.onclick    = (e) => { e.stopPropagation(); openYoutube(i); };
+        btn.ontouchend = (e) => { e.preventDefault(); e.stopPropagation(); openYoutube(i); };
       }
     }
 
-    function abrirVideoActivo() {
-      if (detectedMarkers.size === 0) return;
-      const index = [...detectedMarkers][0];
-      openVideo(index);
+    /* ── Lógica al perder marker ── */
+    function onMarkerLost(i) {
+      const m = MARKERS[i];
+      const btn = document.getElementById('btn-accion');
+
+      if (m.tipo === 'gif') {
+        document.getElementById('gif-overlay').classList.remove('active');
+
+      } else if (m.tipo === 'mp4') {
+        mp4El.pause();
+        mp4El.currentTime = 0;
+
+      } else if (m.tipo === 'youtube') {
+        btn.style.display = 'none';
+      }
     }
 
-    function openVideo(index) {
-      const v = VIDEOS[index];
-      if (!v) return;
-      document.getElementById('yt-frame').src =
-        `https://www.youtube.com/embed/${v.youtubeId}?autoplay=1&rel=0`;
-      document.getElementById('video-title-label').textContent = v.label;
+    /* ── YouTube ── */
+    function openYoutube(i) {
+      const m = MARKERS[i];
       document.getElementById('video-overlay').classList.add('active');
-      document.getElementById('btn-ver-video').style.display = 'none';
+      document.getElementById('btn-accion').style.display = 'none';
+      document.getElementById('video-title-label').textContent = m.label;
+      setTimeout(() => {
+        document.getElementById('yt-frame').src =
+          `https://www.youtube.com/embed/${m.src}?autoplay=1&rel=0&playsinline=1`;
+      }, 80);
       if (mindarSystem) mindarSystem.pause(true);
     }
 
-    function closeVideo() {
+    function closeYoutube() {
       document.getElementById('yt-frame').src = 'about:blank';
       document.getElementById('video-overlay').classList.remove('active');
       if (mindarSystem) mindarSystem.unpause();
-      /* Si hay un marker activo, volver a mostrar el botón */
-      if (detectedMarkers.size > 0) {
-        const index = [...detectedMarkers][0];
-        mostrarBotonVideo(index);
-      }
+      /* Si el marker 2 sigue activo, volver a mostrar el botón */
+      if (detectedMarkers.has(2)) onMarkerFound(2);
     }
 
+    /* ── Salir de AR ── */
     function exitAR() {
-      closeVideo();
+      closeYoutube();
       if (mindarSystem) mindarSystem.stop();
+      mp4El.pause(); mp4El.currentTime = 0;
       detectedMarkers.clear();
+      document.getElementById('gif-overlay').classList.remove('active');
+      document.getElementById('btn-accion').style.display = 'none';
       document.getElementById('ar-container').style.display = 'none';
       document.getElementById('ar-hud').style.display = 'none';
       document.getElementById('btn-exit-ar').style.display = 'none';
-      document.getElementById('btn-ver-video').style.display = 'none';
       document.getElementById('splash').style.display = 'flex';
     }
 
+    /* ── Toast ── */
     let toastTimer;
     function showToast(msg) {
       const t = document.getElementById('toast');
