@@ -159,9 +159,9 @@
     <p>Apuntá la cámara a los markers y descubrí momentos épicos de los Juegos Olímpicos.</p>
     <div class="marker-list">
       <h3>Markers disponibles</h3>
-      <div class="marker-item"><span class="marker-dot dot-0"></span><span>Anillos Olímpicos (GIF)</span></div>
-      <div class="marker-item"><span class="marker-dot dot-1"></span><span>Ceremonia (Video)</span></div>
-      <div class="marker-item"><span class="marker-dot dot-2"></span><span>Paris 2024 (YouTube)</span></div>
+      <div class="marker-item"><span class="marker-dot dot-0"></span><span>🏃‍♀️ Atleta — apuntá para ver la animación</span></div>
+      <div class="marker-item"><span class="marker-dot dot-1"></span><span>🏀 Basquetbolista — apuntá para ver el video</span></div>
+      <div class="marker-item"><span class="marker-dot dot-2"></span><span>⚾ Beisbolista — apuntá para ver YouTube</span></div>
     </div>
     <button id="btn-start" onclick="startAR()">📷 Activar cámara AR</button>
   </div>
@@ -238,9 +238,9 @@
        tipo: 'gif' | 'mp4' | 'youtube'
     ══════════════════════════════════════════ */
     const MARKERS = [
-      { label: "Anillos Olímpicos", tipo: "gif",     src: "anillos.gif" },
-      { label: "Ceremonia",         tipo: "mp4",     src: "ceremonia.mp4" },
-      { label: "Paris 2024",        tipo: "youtube", src: "jJnKzgwkAb0" }
+      { label: "Atleta",        tipo: "gif",     src: "anillos.gif" },
+      { label: "Basquetbolista", tipo: "mp4",    src: "ceremonia.mp4" },
+      { label: "Beisbolista",   tipo: "youtube", src: "jJnKzgwkAb0" }
     ];
 
     /* ── Estado ── */
