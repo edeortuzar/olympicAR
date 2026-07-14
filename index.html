@@ -179,13 +179,17 @@
     /* ══════════════════════════════════════════
        CONFIGURACIÓN — un WebM por marker
     ══════════════════════════════════════════ */
+    /* Detectar iOS — WebM no funciona en ningún browser iOS */
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
     const MARKERS = [
-      { label: "Atletismo",  webm: "atletismo.mp4"  },
-      { label: "Básquet",    webm: "basquet.mp4"    },
-      { label: "Béisbol",    webm: "beisbol.mp4"    },
-      { label: "Natación",   webm: "natacion.mp4"   },
-      { label: "Vóley",      webm: "voley.mp4"      },
-      { label: "Taekwondo",  webm: "taekwondo.mp4"  }
+      { label: "Atletismo",  webm: "atletismo.webm",     mp4: "atletismo.mp4"     },
+      { label: "Básquet",    webm: "basquet.webm",       mp4: "basquet.mp4"       },
+      { label: "Béisbol",    webm: "beisbol_alpha.webm", mp4: "beisbol_alpha.mp4" },
+      { label: "Natación",   webm: "natacion.webm",      mp4: "natacion.mp4"      },
+      { label: "Vóley",      webm: "voley.webm",         mp4: "voley.mp4"         },
+      { label: "Taekwondo",  webm: "taekwondo.webm",     mp4: "taekwondo.mp4"     }
     ];
 
     /* ── Estado ── */
@@ -230,10 +234,12 @@
       activeMarker = i;
       hud.innerHTML = `<span class="dot-pulse"></span>${MARKERS[i].label} detectado`;
 
-      /* Cambiar src solo si es un marker diferente al que ya se está reproduciendo */
-      if (player.dataset.current !== MARKERS[i].webm) {
-        player.src = MARKERS[i].webm;
-        player.dataset.current = MARKERS[i].webm;
+      /* Elegir formato según dispositivo */
+      const src = isIOS ? MARKERS[i].mp4 : MARKERS[i].webm;
+
+      if (player.dataset.current !== src) {
+        player.src = src;
+        player.dataset.current = src;
         player.load();
       }
       player.play().catch(e => console.warn('play:', e));
