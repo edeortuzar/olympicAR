@@ -49,6 +49,22 @@
     .dot-0{background:#0085C7;} .dot-1{background:#F4C300;} .dot-2{background:#DF0024;}
     .dot-3{background:#009F3D;} .dot-4{background:#fff;}    .dot-5{background:#ff6b35;}
 
+    .version-badge {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.08em;
+      pointer-events: none;
+      z-index: 101;
+    }
+
     #btn-start {
       background: #0085C7; color: #fff; border: none; border-radius: 50px;
       padding: 1rem 2.5rem; font-size: 1rem; font-weight: 600; cursor: pointer;
@@ -126,6 +142,7 @@
       <div class="marker-item"><span class="marker-dot dot-5"></span><span>🥋 Taekwondo</span></div>
     </div>
     <button id="btn-start" onclick="startAR()">📷 Activar cámara AR</button>
+    <div class="version-badge">v1.0.0</div>
   </div>
 
   <!-- ESCENA AR -->
